@@ -1,0 +1,37 @@
+version: "3"
+services:
+  ofelia:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - model
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "32m"
+
+  model:
+    build: ./docker_images/jupyter
+    volumes:
+      - ./.git:/app/.git:ro
+      - ./data:/app/data:ro
+      - ./src:/app/src:ro
+    working_dir: /app
+    environment:
+      ALPHASEA_AGENT_BASE_URL: ${ALPHASEA_AGENT_BASE_URL:-http://localhost:8070}
+      ALPHASEA_MODEL_ID: ${ALPHASEA_MODEL_ID:-example_model}
+      ALPHASEA_MODEL_PATH: '/app/data/model.xz'
+      ALPHASEA_SYMBOLS: ${ALPHASEA_SYMBOLS:-BTC,ETH,XRP,LINK,ATOM,DOT,SOL,BNB,MATIC,ADA}
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.predictcron.schedule: "5 1 * * *"
+      ofelia.job-exec.predictcron.command: "python src/predict.py"
+    command: bash -c "while :; do sleep 1; done"
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "32m"
