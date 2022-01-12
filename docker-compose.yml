@@ -35,3 +35,5 @@ services:
       driver: "json-file"
       options:
         max-size: "32m"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

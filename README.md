@@ -9,7 +9,10 @@ Numeraiのexample modelに相当します。
 ## 動かし方
 
 .envファイルを作り、ALPHASEA_MODEL_IDを設定します。
-ALPHASEA_MODEL_IDはユニークである必要があります。
+
+- Numeraiのモデル名に相当します。
+- ALPHASEA_MODEL_IDはAlphaSea全体でユニークである必要があります。
+- ALPHASEA_MODEL_IDには4文字以上31文字以内のC識別子を設定できます。
 
 #### **`.env`**
 ```text
