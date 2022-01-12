@@ -2,9 +2,9 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
-from .logger import create_logger
-from .ml_utils import fetch_daily_ohlcv
-from .agent_api import submit_prediction
+from logger import create_logger
+from ml_utils import fetch_daily_ohlcv
+from agent_api import submit_prediction
 
 agent_base_url = os.getenv('ALPHASEA_AGENT_BASE_URL')
 model_id = os.getenv('ALPHASEA_MODEL_ID')
