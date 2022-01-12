@@ -21,13 +21,13 @@ services:
       - ./src:/app/src:ro
     working_dir: /app
     environment:
-      ALPHASEA_AGENT_BASE_URL: ${ALPHASEA_AGENT_BASE_URL:-http://localhost:8070}
-      ALPHASEA_MODEL_ID: ${ALPHASEA_MODEL_ID:-example_model}
+      ALPHASEA_AGENT_BASE_URL: ${ALPHASEA_AGENT_BASE_URL:-http://host.docker.internal:8070}
+      ALPHASEA_MODEL_ID: ${ALPHASEA_MODEL_ID}
       ALPHASEA_MODEL_PATH: '/app/data/model.xz'
       ALPHASEA_SYMBOLS: ${ALPHASEA_SYMBOLS:-BTC,ETH,XRP,LINK,ATOM,DOT,SOL,BNB,MATIC,ADA}
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.predictcron.schedule: "5 1 * * *"
+      ofelia.job-exec.predictcron.schedule: "5 0 * * *"
       ofelia.job-exec.predictcron.command: "python src/predict.py"
     command: bash -c "while :; do sleep 1; done"
     restart: always
