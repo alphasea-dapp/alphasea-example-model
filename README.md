@@ -40,3 +40,20 @@ docker-compose -f docker-compose-jupyter.yml up -d
 ```
 
 http://localhost:8888/lab/workspaces/auto-f/tree/notebooks にアクセス
+
+## Development
+
+### test
+
+alphasea-agentに依存。
+
+```bash
+docker-compose run --rm model bash scripts/test.sh
+```
+
+### predict
+
+```bash
+docker-compose run --rm model python src/predict.py
+```
+

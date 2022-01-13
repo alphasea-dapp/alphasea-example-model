@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir \
     "git+https://github.com/richmanbtc/ccxt_rate_limiter.git@v0.0.4#egg=ccxt_rate_limiter" \
     "git+https://github.com/richmanbtc/crypto_data_fetcher.git@v0.0.17#egg=crypto_data_fetcher" \
     cloudpickle==2.0.0 \
+    coverage==6.2 \
     lightgbm==3.2.1 \
     TA-Lib==0.4.21
 

@@ -18,7 +18,10 @@ services:
     volumes:
       - ./.git:/app/.git:ro
       - ./data:/app/data:ro
+      - ./scripts:/app/scripts:ro
       - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./tmp:/tmp/alphasea-example-model
     working_dir: /app
     environment:
       ALPHASEA_AGENT_BASE_URL: ${ALPHASEA_AGENT_BASE_URL:-http://host.docker.internal:8070}
