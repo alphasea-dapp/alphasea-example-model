@@ -19,19 +19,11 @@ Numeraiのexample modelに相当します。
 ALPHASEA_MODEL_ID=my_model_id
 ```
 
-以下でofeliaと予測ボットを起動します。
+以下で予測ボットを起動します。
 
 ```bash
 docker-compose up -d
 ```
-
-## ofelia
-
-[ofelia](https://github.com/mcuadros/ofelia)を使って、
-以下のタスクを実行しています。
-ofeliaはdockerと親和性の高いcronのようなものです。
-
-- 0:05 UTC 予測投稿
 
 ## モデル改良
 
@@ -56,4 +48,3 @@ docker-compose run --rm model bash scripts/test.sh
 ```bash
 docker-compose run --rm model python src/predict.py
 ```
-

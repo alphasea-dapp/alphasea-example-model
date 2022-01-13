@@ -25,6 +25,7 @@ RUN pip install --no-cache-dir \
     cloudpickle==2.0.0 \
     coverage==6.2 \
     lightgbm==3.2.1 \
+    schedule==1.1.0 \
     TA-Lib==0.4.21
 
 # matplotlibで日本語を使えるようにする

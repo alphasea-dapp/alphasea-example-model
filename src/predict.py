@@ -2,9 +2,9 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
-from logger import create_logger
-from ml_utils import fetch_daily_ohlcv
-from agent_api import submit_prediction
+from .logger import create_logger
+from .ml_utils import fetch_daily_ohlcv
+from .agent_api import submit_prediction
 
 agent_base_url = os.getenv('ALPHASEA_AGENT_BASE_URL')
 model_id = os.getenv('ALPHASEA_MODEL_ID')
@@ -13,7 +13,7 @@ log_level = os.getenv('ALPHASEA_LOG_LEVEL')
 symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
 
 
-def main():
+def predict_job():
     logger = create_logger(log_level)
 
     # fetch features
@@ -35,9 +35,8 @@ def main():
     result = submit_prediction(
         agent_base_url=agent_base_url,
         model_id=model_id,
-        df=df
+        df=df,
+        prediction_license='CC0-1.0'
     )
     logger.info(result)
 
-
-main()
