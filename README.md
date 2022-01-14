@@ -33,6 +33,12 @@ docker-compose -f docker-compose-jupyter.yml up -d
 
 http://localhost:8888/lab/workspaces/auto-f/tree/notebooks にアクセス
 
+## environment variables
+
+|name|description|
+|:-:|:-:|
+|ALPHASEA_POSITION_NOISE|提出するポジションにノイズを加える(デバッグ用)|
+
 ## Development
 
 ### test

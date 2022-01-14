@@ -11,6 +11,7 @@ model_id = os.getenv('ALPHASEA_MODEL_ID')
 model_path = os.getenv('ALPHASEA_MODEL_PATH')
 log_level = os.getenv('ALPHASEA_LOG_LEVEL')
 symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
+position_noise = float(os.getenv('ALPHASEA_POSITION_NOISE'))
 
 
 def predict_job():
@@ -25,6 +26,7 @@ def predict_job():
 
     # calc position
     df['position'] = np.sign(df['y_pred'])
+    df['position'] += np.random.normal(0, position_noise, size=df.shape[0])
     df['position_abs'] = df['position'].abs()
     df['position'] /= 1e-37 + df.groupby('timestamp')['position'].transform('sum')
 

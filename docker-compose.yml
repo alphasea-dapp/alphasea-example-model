@@ -16,6 +16,7 @@ services:
       ALPHASEA_MODEL_PATH: '/app/data/model.xz'
       ALPHASEA_LOG_LEVEL: debug
       ALPHASEA_SYMBOLS: ${ALPHASEA_SYMBOLS:-BTC,ETH,XRP,LINK,ATOM,DOT,SOL,BNB,MATIC,ADA}
+      ALPHASEA_POSITION_NOISE: ${ALPHASEA_POSITION_NOISE:-0}
     command: python -m src.main
     user: root
     restart: always
