@@ -27,8 +27,10 @@ def predict_job():
     # calc position
     df['position'] = np.sign(df['y_pred'])
     df['position'] += np.random.normal(0, position_noise, size=df.shape[0])
+
+    # normalize
     df['position_abs'] = df['position'].abs()
-    df['position'] /= 1e-37 + df.groupby('timestamp')['position'].transform('sum')
+    df['position'] /= 1e-37 + df.groupby('timestamp')['position_abs'].transform('sum')
 
     # filter last timestamp
     df = df.loc[df.index.get_level_values('timestamp') == df.index.get_level_values('timestamp').max()]
