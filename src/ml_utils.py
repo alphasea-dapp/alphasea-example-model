@@ -30,6 +30,7 @@ def fetch_daily_ohlcv(symbols: list, with_target=False, logger=None):
         df = df.reset_index().merge(df_target.reset_index(), on=['symbol', 'execution_start_at'], how='left')
         df = df.set_index(['timestamp', 'symbol'])
 
+    df = df.sort_index()
     return df
 
 
@@ -76,3 +77,9 @@ def create_data_fetcher(logger=None):
         wrap_defs=ftx_wrap_defs()
     )
     return FtxFetcher(ccxt_client=client, logger=logger)
+
+
+def unbiased_rank2(x):
+    count = x.transform('count')
+    rank = x.rank()
+    return (rank - 1.0).mask(count == 1, rank - 0.5) / (count - 1.0).mask(count == 1, 1.0)
