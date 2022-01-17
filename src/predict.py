@@ -1,4 +1,5 @@
 import os
+import re
 import joblib
 import numpy as np
 import pandas as pd
@@ -12,6 +13,9 @@ model_path = os.getenv('ALPHASEA_MODEL_PATH')
 log_level = os.getenv('ALPHASEA_LOG_LEVEL')
 symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
 position_noise = float(os.getenv('ALPHASEA_POSITION_NOISE'))
+
+if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id):
+    raise Exception('model_id must be ^[a-zA-Z_][a-zA-Z0-9_]{3,30}$')
 
 
 def predict_job():
@@ -43,4 +47,3 @@ def predict_job():
         prediction_license='CC0-1.0'
     )
     logger.info(result)
-

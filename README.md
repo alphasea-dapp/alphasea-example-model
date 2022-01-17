@@ -10,9 +10,9 @@ Numeraiのexample modelに相当します。
 
 .envファイルを作り、ALPHASEA_MODEL_IDを設定します。
 
-- Numeraiのモデル名に相当します。
-- ALPHASEA_MODEL_IDはAlphaSea全体でユニークである必要があります。
-- ALPHASEA_MODEL_IDには4文字以上31文字以内のC識別子を設定できます。
+- Numeraiのモデル名に相当
+- ALPHASEA_MODEL_IDはAlphaSea全体でユニーク
+- ALPHASEA_MODEL_IDは4文字以上31文字以内の小文字のC識別子 ( \[a-z_\]\[a-z0-9_\]{3,30} )
 
 #### **`.env`**
 ```text
@@ -23,6 +23,12 @@ ALPHASEA_MODEL_ID=my_model_id
 
 ```bash
 docker-compose up -d
+```
+
+以下で正しく起動できたか確認します。
+
+```bash
+docker-compose logs
 ```
 
 ## モデル改良
