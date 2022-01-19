@@ -20,7 +20,7 @@ def fetch_daily_ohlcv(symbols: list, with_target=False, logger=None):
         df = df.reset_index()
 
         df['symbol'] = symbol
-        df['execution_start_at'] = df['timestamp'] + pd.to_timedelta(25, unit='H')
+        df['execution_start_at'] = df['timestamp'] + pd.to_timedelta(24 * 60 * 60 + 30 * 60, unit='S')
         df = df.set_index(['timestamp', 'symbol'])
         dfs.append(df)
     df = pd.concat(dfs)
@@ -48,7 +48,8 @@ def _fetch_targets(symbols: list, logger=None):
 
         df = df.reset_index()
 
-        df['execution_start_at'] = df['timestamp'].dt.floor('1H')
+        shift = pd.to_timedelta(30 * 60, unit='S')
+        df['execution_start_at'] = (df['timestamp'] - shift).dt.floor('1H') + shift
         df = pd.concat([
             df.groupby(['execution_start_at'])['cl'].mean().rename('twap'),
         ], axis=1)
