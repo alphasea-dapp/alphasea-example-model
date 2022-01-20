@@ -162,8 +162,6 @@ def visualize_result(df, execution_cost=0.001):
     print('std {}'.format(np.std(ret_with_cost)))
     print('sharpe {}'.format(calc_sharpe(ret_with_cost)))
     print('max drawdown {}'.format(calc_max_dd(ret_with_cost)))
-    feature_exposure =
-    print('feature exposure {}'.format(feature_exposure.abs().max()))
 
     # plot ret
     for symbol, df_symbol in df.groupby('symbol'):
