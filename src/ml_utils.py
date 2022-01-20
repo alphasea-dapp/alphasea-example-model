@@ -12,9 +12,7 @@ EXECUTION_TIME_SEC = 60 * 60
 EXECUTION_INTERVAL_SEC = 24 * 60 * 60
 
 
-def fetch_daily_ohlcv(symbols: list, with_target=False, logger=None):
-    interval_sec = 24 * 60 * 60
-
+def fetch_daily_ohlcv(symbols: list, with_target=False, interval_sec=24 * 60 * 60, logger=None):
     dfs = []
     for symbol in symbols:
         fetcher = create_data_fetcher(logger=logger)

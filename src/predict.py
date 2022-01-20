@@ -20,12 +20,15 @@ if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id):
 
 def predict_job(dry_run=False):
     logger = create_logger(log_level)
+    model = joblib.load(model_path)
 
     # fetch features
-    df = fetch_daily_ohlcv(symbols=symbols, logger=logger)
+    interval_sec = 24 * 60 * 60
+    if hasattr(model, 'interval_sec'):
+        interval_sec = model.interval_sec
+    df = fetch_daily_ohlcv(symbols=symbols, logger=logger, interval_sec=interval_sec)
 
     # predict
-    model = joblib.load(model_path)
     df['position'] = model.predict(df)
 
     # add noise (for debug)
