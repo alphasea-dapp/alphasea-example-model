@@ -4,6 +4,7 @@ from ccxt_rate_limiter.ftx import ftx_limits, ftx_wrap_defs
 from ccxt_rate_limiter.rate_limiter_group import RateLimiterGroup
 from crypto_data_fetcher.ftx import FtxFetcher
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 EXECUTION_LAG_SEC = 30 * 60
@@ -142,6 +143,11 @@ def calc_position_cv(model, df, cv=5):
         model.fit(df.loc[train_idx])
         df.loc[val_idx, 'position'] = model.predict(df.loc[val_idx])
 
+def calc_sharpe(x):
+    return np.mean(x) / (1e-37 + np.std(x))
+
+def calc_max_dd(x):
+    return (x.expanding().max() - x).max()
 
 def visualize_result(df, execution_cost=0.001):
     # calc return
@@ -149,12 +155,22 @@ def visualize_result(df, execution_cost=0.001):
     df['cost'] = (df['position'] - df.groupby('symbol')['position'].shift(1)).fillna(0).abs() * execution_cost
     df['ret_pos_cost'] = df['ret_pos'] - df['cost']
 
+    # print statistics
+    ret_with_cost = df.groupby('timestamp')['ret_pos_cost'].sum()
+    print('return with cost statistics')
+    print('mean {}'.format(np.mean(ret_with_cost)))
+    print('std {}'.format(np.std(ret_with_cost)))
+    print('sharpe {}'.format(calc_sharpe(ret_with_cost)))
+    print('max drawdown {}'.format(calc_max_dd(ret_with_cost)))
+    feature_exposure =
+    print('feature exposure {}'.format(feature_exposure.abs().max()))
+
     # plot ret
     for symbol, df_symbol in df.groupby('symbol'):
         df_symbol = df_symbol.reset_index().set_index('timestamp')
-        df_symbol['ret_pos'].cumsum().plot(label=symbol)
+        df_symbol['ret_pos_cost'].cumsum().plot(label=symbol)
     plt.legend(bbox_to_anchor=(1.05, 1))
-    plt.title('return by symbol')
+    plt.title('return with cost by symbol')
     plt.show()
 
     # plot position
