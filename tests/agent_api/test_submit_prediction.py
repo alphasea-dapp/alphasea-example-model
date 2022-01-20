@@ -11,7 +11,7 @@ class TestSubmitPrediction(TestCase):
         df = pd.DataFrame([
             ['BTC', 0.1]
         ], columns=['symbol', 'position']).set_index('symbol')
-        df['execution_start_at'] = pd.to_datetime('2020-01-01 1:00Z')
+        df['execution_start_at'] = pd.to_datetime('2020-01-01 0:30Z')
 
         result = submit_prediction(
             agent_base_url=agent_base_url,

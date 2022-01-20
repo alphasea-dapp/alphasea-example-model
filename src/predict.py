@@ -15,7 +15,7 @@ symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
 position_noise = float(os.getenv('ALPHASEA_POSITION_NOISE'))
 
 if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id):
-    raise Exception('model_id must be ^[a-zA-Z_][a-zA-Z0-9_]{3,30}$')
+    raise Exception('model_id must be ^[a-z_][a-z0-9_]{3,30}$')
 
 
 def predict_job():
