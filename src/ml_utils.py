@@ -8,11 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 EXECUTION_LAG_SEC = 30 * 60
-EXECUTION_TIME_SEC = 60 * 60
+EXECUTION_TIME_SEC = 2 * 60 * 60
 EXECUTION_INTERVAL_SEC = 24 * 60 * 60
 
 
-def fetch_daily_ohlcv(symbols: list, with_target=False, interval_sec=24 * 60 * 60, logger=None):
+def fetch_ohlcv(symbols: list, with_target=False, interval_sec=60 * 60, logger=None):
     dfs = []
     for symbol in symbols:
         fetcher = create_data_fetcher(logger=logger)
@@ -55,11 +55,11 @@ def _fetch_targets(symbols: list, logger=None):
         df = df.reset_index()
 
         shift = pd.to_timedelta(EXECUTION_LAG_SEC, unit='S')
-        df['execution_start_at'] = (df['timestamp'] - shift).dt.floor('1H') + shift
+        df['execution_start_at'] = (df['timestamp'] - shift).dt.floor('{}S'.format(EXECUTION_TIME_SEC)) + shift
         df = pd.concat([
             df.groupby(['execution_start_at'])['cl'].mean().rename('twap'),
         ], axis=1)
-        df['ret'] = df['twap'].shift(-24) / df['twap'] - 1
+        df['ret'] = df['twap'].shift(-24 // (EXECUTION_TIME_SEC // (60 * 60))) / df['twap'] - 1
         df = df.drop(columns='twap')
         df = df.dropna()
 
@@ -141,25 +141,38 @@ def calc_position_cv(model, df, cv=5):
         model.fit(df.loc[train_idx])
         df.loc[val_idx, 'position'] = model.predict(df.loc[val_idx])
 
+
 def calc_sharpe(x):
     return np.mean(x) / (1e-37 + np.std(x))
+
 
 def calc_max_dd(x):
     return (x.expanding().max() - x).max()
 
+
 def visualize_result(df, execution_cost=0.001):
+    df = df.copy()
+
     # calc return
     df['ret_pos'] = df['ret'] * df['position']
-    df['cost'] = (df['position'] - df.groupby('symbol')['position'].shift(1)).fillna(0).abs() * execution_cost
+    df['hour'] = df.index.get_level_values('timestamp').hour
+    df['position_prev'] = df.groupby(['hour', 'symbol'])['position'].shift(1).fillna(0)
+    df['cost'] = (df['position'] - df['position_prev']).abs() * execution_cost
     df['ret_pos_cost'] = df['ret_pos'] - df['cost']
 
     # print statistics
-    ret_with_cost = df.groupby('timestamp')['ret_pos_cost'].sum()
-    print('return with cost statistics')
-    print('mean {}'.format(np.mean(ret_with_cost)))
-    print('std {}'.format(np.std(ret_with_cost)))
-    print('sharpe {}'.format(calc_sharpe(ret_with_cost)))
-    print('max drawdown {}'.format(calc_max_dd(ret_with_cost)))
+    for with_cost in [False, True]:
+        if with_cost:
+            print('return with cost statistics')
+            x = df.groupby('timestamp')['ret_pos_cost'].sum()
+        else:
+            print('return without cost statistics')
+            x = df.groupby('timestamp')['ret_pos'].sum()
+
+        print('mean {}'.format(np.mean(x)))
+        print('std {}'.format(np.std(x)))
+        print('sharpe {}'.format(calc_sharpe(x)))
+        print('max drawdown {}'.format(calc_max_dd(x)))
 
     # plot ret
     for symbol, df_symbol in df.groupby('symbol'):

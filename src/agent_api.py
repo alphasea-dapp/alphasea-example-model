@@ -7,6 +7,7 @@ def submit_prediction(agent_base_url=None, model_id=None, df=None, prediction_li
     assert (prediction_license == 'CC0-1.0')
 
     execution_start_at = df['execution_start_at'].iloc[0].timestamp()
+    tournament_id = 'crypto_daily_{:02}30'.format(df['execution_start_at'].iloc[0].hour)
 
     df = df.reset_index()
     df = df[['symbol', 'position']]
@@ -18,6 +19,7 @@ def submit_prediction(agent_base_url=None, model_id=None, df=None, prediction_li
     url = agent_base_url + '/submit_prediction'
     data = {
         'model_id': model_id,
+        'tournament_id': tournament_id,
         'execution_start_at': execution_start_at,
         'prediction_license': prediction_license,
         'content': output.getvalue(),

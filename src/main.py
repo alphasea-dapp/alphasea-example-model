@@ -5,7 +5,8 @@ from .predict import predict_job
 # check at startup
 predict_job(dry_run=True)
 
-schedule.every().day.at('00:04').do(predict_job)
+for hour in range(0, 24, 2):
+    schedule.every().day.at('{:02}:03'.format(hour)).do(predict_job)
 
 while True:
     schedule.run_pending()
