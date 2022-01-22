@@ -8,16 +8,15 @@ Numeraiのexample modelに相当します。
 
 ## 動かし方
 
-.envファイルを作り、ALPHASEA_MODEL_ID_PREFIXを設定します。
+.envファイルを作り、ALPHASEA_MODEL_IDを設定します。
 
 - Numeraiのモデル名に相当
 - model_idはAlphaSea全体でユニーク
 - model_idは4文字以上31文字以内の小文字のC識別子 ( \[a-z_\]\[a-z0-9_\]{3,30} )
-- 実際のモデルIDは末尾に0030や0230など執行時刻を表す文字列が追加される
 
 #### **`.env`**
 ```text
-ALPHASEA_MODEL_ID_PREFIX=my_model_id_
+ALPHASEA_MODEL_ID=my_model_id
 ```
 
 以下で予測ボットを起動します。

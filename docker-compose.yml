@@ -12,7 +12,7 @@ services:
     working_dir: /app
     environment:
       ALPHASEA_AGENT_BASE_URL: ${ALPHASEA_AGENT_BASE_URL:-http://host.docker.internal:8070}
-      ALPHASEA_MODEL_ID_PREFIX: ${ALPHASEA_MODEL_ID_PREFIX}
+      ALPHASEA_MODEL_ID: ${ALPHASEA_MODEL_ID}
       ALPHASEA_MODEL_PATH: ${ALPHASEA_MODEL_PATH:-/app/data/example_model.xz}
       ALPHASEA_LOG_LEVEL: debug
       ALPHASEA_SYMBOLS: ${ALPHASEA_SYMBOLS:-BTC,ETH,XRP,LINK,ATOM,DOT,SOL,BNB,MATIC,ADA}
