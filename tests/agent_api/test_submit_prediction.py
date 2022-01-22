@@ -15,7 +15,7 @@ class TestSubmitPrediction(TestCase):
 
         result = submit_prediction(
             agent_base_url=agent_base_url,
-            model_id='model1',
+            model_id_prefix='model1_',
             df=df,
             prediction_license='CC0-1.0'
         )

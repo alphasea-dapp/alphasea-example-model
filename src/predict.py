@@ -8,13 +8,13 @@ from .ml_utils import fetch_ohlcv, normalize_position
 from .agent_api import submit_prediction
 
 agent_base_url = os.getenv('ALPHASEA_AGENT_BASE_URL')
-model_id = os.getenv('ALPHASEA_MODEL_ID')
+model_id_prefix = os.getenv('ALPHASEA_MODEL_ID_PREFIX')
 model_path = os.getenv('ALPHASEA_MODEL_PATH')
 log_level = os.getenv('ALPHASEA_LOG_LEVEL')
 symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
 position_noise = float(os.getenv('ALPHASEA_POSITION_NOISE'))
 
-if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id):
+if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id_prefix):
     raise Exception('model_id must be ^[a-z_][a-z0-9_]{3,30}$')
 
 
@@ -44,7 +44,7 @@ def predict_job(dry_run=False):
     else:
         result = submit_prediction(
             agent_base_url=agent_base_url,
-            model_id=model_id,
+            model_id_prefix=model_id_prefix,
             df=df,
             prediction_license='CC0-1.0'
         )

@@ -2,12 +2,14 @@ from io import StringIO
 import requests
 
 
-def submit_prediction(agent_base_url=None, model_id=None, df=None, prediction_license=None):
+def submit_prediction(agent_base_url=None, model_id_prefix=None, df=None, prediction_license=None):
     assert (df['execution_start_at'].unique().size == 1)
     assert (prediction_license == 'CC0-1.0')
 
     execution_start_at = df['execution_start_at'].iloc[0].timestamp()
-    tournament_id = 'crypto_daily_{:02}30'.format(df['execution_start_at'].iloc[0].hour)
+    hour = df['execution_start_at'].iloc[0].hour
+    tournament_id = 'crypto_daily_{:02}30'.format(hour)
+    model_id = '{}{:02}30'.format(model_id_prefix, hour)
 
     df = df.reset_index()
     df = df[['symbol', 'position']]
