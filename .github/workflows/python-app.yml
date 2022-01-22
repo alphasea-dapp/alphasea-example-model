@@ -1,0 +1,41 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+    - name: Run tests
+      run: |
+        git clone https://github.com/alphasea-dapp/alphasea.git
+        cd alphasea
+        yarn install
+        npx hardhat compile
+        npx hardhat node --hostname 0.0.0.0 &
+        sleep 5
+        npx hardhat run --network localhost scripts/deploy.js
+        cd ../
+
+        git clone https://github.com/alphasea-dapp/alphasea-agent.git
+        cd alphasea-agent
+        docker-compose -f docker-compose-dev.yml up -d
+        cd ../
+  
+        echo 'ALPHASEA_MODEL_ID=example_model' > .env
+        docker-compose run --rm model bash scripts/test.sh
