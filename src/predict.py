@@ -12,7 +12,6 @@ agent_base_url = os.getenv('ALPHASEA_AGENT_BASE_URL')
 model_id = os.getenv('ALPHASEA_MODEL_ID')
 model_path = os.getenv('ALPHASEA_MODEL_PATH')
 log_level = os.getenv('ALPHASEA_LOG_LEVEL')
-symbols = os.getenv('ALPHASEA_SYMBOLS').split(',')
 position_noise = float(os.getenv('ALPHASEA_POSITION_NOISE'))
 
 if not re.match(r'^[a-z_][a-z0-9_]{3,30}$', model_id):
@@ -28,7 +27,7 @@ def predict_job(dry_run=False):
     max_retry_count = 5
     for _ in range(max_retry_count):
         try:
-            df = fetch_ohlcv(symbols=symbols, logger=logger, interval_sec=interval_sec)
+            df = fetch_ohlcv(symbols=model.symbols, logger=logger, interval_sec=interval_sec)
             max_timestamp = df.index.get_level_values('timestamp').max()
             df = df.loc[max_timestamp - pd.to_timedelta(model.max_data_sec, unit='S') <= df.index.get_level_values('timestamp')]
             break

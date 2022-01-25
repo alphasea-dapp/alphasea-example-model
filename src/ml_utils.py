@@ -129,6 +129,10 @@ def get_feature_columns(df):
     return sorted(df.columns[df.columns.str.startswith('feature')].to_list())
 
 
+def get_symbols(df):
+    return sorted(df.index.get_level_values('symbol').unique().to_list())
+
+
 def normalize_position(df):
     df2 = df.copy()
     df2['position_abs'] = df2['position'].abs()
