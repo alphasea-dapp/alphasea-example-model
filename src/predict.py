@@ -3,6 +3,7 @@ import re
 import joblib
 import numpy as np
 import pandas as pd
+import traceback
 from .logger import create_logger
 from .ml_utils import fetch_ohlcv, normalize_position
 from .agent_api import submit_prediction
@@ -24,9 +25,17 @@ def predict_job(dry_run=False):
 
     # fetch data
     interval_sec = 60 * 60
-    df = fetch_ohlcv(symbols=symbols, logger=logger, interval_sec=interval_sec)
-    max_timestamp = df.index.get_level_values('timestamp').max()
-    df = df.loc[max_timestamp - pd.to_timedelta(model.max_data_sec, unit='S') <= df.index.get_level_values('timestamp')]
+    max_retry_count = 5
+    for _ in range(max_retry_count):
+        try:
+            df = fetch_ohlcv(symbols=symbols, logger=logger, interval_sec=interval_sec)
+            max_timestamp = df.index.get_level_values('timestamp').max()
+            df = df.loc[max_timestamp - pd.to_timedelta(model.max_data_sec, unit='S') <= df.index.get_level_values('timestamp')]
+            break
+        except Exception as e:
+            logger.error(e)
+            logger.error(traceback.format_exc())
+            logger.info('fetch_ohlcv error. retrying')
 
     # predict
     df['position'] = model.predict(df)
